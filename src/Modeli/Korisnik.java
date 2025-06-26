@@ -1,5 +1,7 @@
 package Modeli;
 
+import java.util.Iterator;
+
 public class Korisnik {
     private String korisnickoIme;
     private String lozinka;
@@ -21,9 +23,18 @@ public class Korisnik {
     public boolean proveriLozinku(String lozinka){
         return this.lozinka.equals(lozinka);
     }
+    public String getLozinka() {
+        return lozinka;
+    }
+
+    public void setLozinka(String lozinka) {
+        this.lozinka = lozinka;
+    }
 
     @Override
     public String toString() {
         return korisnickoIme + "( " + uloga + ") ";
     }
-}
+
+    }
+

@@ -1,11 +1,13 @@
 import Korisnici.*;
 import Modeli.*;
+import Servis.Aplikacija;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main{
     public static void main(String [] args){
+        new Aplikacija().pokreni();
         Korisnik korisnik = new Korisnik("Aleksa123", "sifra123");
         Jelo j1 = new Jelo("Pizza", 1200);
         Jelo j2 = new Jelo("Burger", 950);
