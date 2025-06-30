@@ -8,7 +8,7 @@ public class Aplikacija {
     private Scanner scan = new Scanner(System.in);
     private KorisnickiServis korisnickiServis = new KorisnickiServis();
     private Korisnik ulogovanKorisnik = null;
-
+//pokretanje aplikacije
     public void pokreni() {
         System.out.println("Dobrodosli u Sistem za Narucivanje hrane!");
         while (true) {
@@ -33,7 +33,7 @@ public class Aplikacija {
             }
         }
     }
-
+// login korisnika
     private void login() {
         System.out.println("Korisnicko ime: ");
         String korisnickoIme = scan.nextLine();
@@ -43,13 +43,17 @@ public class Aplikacija {
         if (k != null) {
             ulogovanKorisnik = k;
             System.out.println("Uspesna prijava.Dobrodosao, " + k.getKorisnickoIme() + " ! ");
-            korisnickiMeni();
+         if(k.getKorisnickoIme().equalsIgnoreCase("admin")){
+             adminMeni();// pozivamo admin meni ako se uloguje admin
+         }else{
+             korisnickiMeni();
+         }
         } else {
             System.out.println("Uneli ste pogresno korisnicko ime ili lozinku, pokusajte ponovo");
 
         }
     }
-
+// registracija novog korisnika
     private void registracija() {
         System.out.print("Unesite korisničko ime: ");
         String korisnickoIme = scan.nextLine();
@@ -62,7 +66,7 @@ public class Aplikacija {
             System.out.println("Korisnicko ime vec postoji");
         }
     }
-
+// korisnicki meni nakon logovanja
     private void korisnickiMeni() {
         while (true) {
             System.out.println("\n === KORISNICKI MENI ===");
@@ -76,7 +80,7 @@ public class Aplikacija {
             System.out.println("Izaberite opciju: ");
             String izbor = scan.nextLine();
 
-
+//SWITCH NA OSNOVU BROJEVA OD GORE
             switch (izbor) {
                 case "1":
                     System.out.println("Ovde će ići prikaz menija...");
@@ -123,6 +127,39 @@ public class Aplikacija {
                 default:
                     System.out.println("Nepoznata opcija.");
             }
+        }
+    }
+    private void adminMeni(){
+        while (true){
+            System.out.println("\n ===ADMIN MENI===");
+            System.out.println("1. Prikaz svih korisnika");
+            System.out.println("2. Brisanje korisnika po imenu");
+            System.out.println("3. Odjava");
+            System.out.println("Izaberite opciju");
+            String izbor = scan.nextLine();
+
+            switch (izbor) {
+                case "1":
+                    for (Korisnik k : korisnickiServis.getKorisnici()) {
+                        System.out.println("- " + k.getKorisnickoIme());
+                    }
+                    break;
+                case "2":
+                    System.out.print("Unesite korisničko ime koje želite da obrišete: ");
+                    String korisnikZaBrisanje = scan.nextLine();
+                    if (korisnickiServis.obrisiKorisnikaPoImenu(korisnikZaBrisanje)) {
+                        System.out.println("✅ Korisnik je obrisan.");
+                    } else {
+                        System.out.println("❌ Korisnik nije pronađen.");
+                    }
+                    break;
+                case "3":
+                    System.out.println("Odjava admina.");
+                    return;
+                default:
+                    System.out.println("Nepoznata opcija.");
+            }
+
         }
     }
 }

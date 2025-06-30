@@ -21,6 +21,7 @@ public class Meni {
         }
 
     }
+    // NALAZENJE JELA PO ID
     public Jelo nadjiJeloPoId(int id){
         for(Jelo j : jela){
             if(j.getId() == id){
@@ -29,6 +30,7 @@ public class Meni {
         }
         return null;
     }
+    //BRISANJE JELA
     public boolean obrisiJelo(int id){
         Jelo zaBrisanje = nadjiJeloPoId(id);
         if(zaBrisanje!=null){

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 public class KorisnickiServis {
+    //UCITAVANJE KORISNIKA IZ FAJLA
     private static final String FAJL_KORISNIKA = "korisnici.txt";
     private List<Korisnik> korisnici = new ArrayList<>();
 
@@ -17,7 +18,7 @@ public class KorisnickiServis {
         upisiKorisnikaUFajl(korisnickoIme, lozinka);
         return true;
     }
-
+// UPISIVANJE KORISNIKA U FAJL
     private void upisiKorisnikaUFajl(String korisnickoIme, String lozinka) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FAJL_KORISNIKA, true))) {
             bw.write(korisnickoIme + ";" + lozinka);
@@ -26,7 +27,7 @@ public class KorisnickiServis {
             System.out.println("❌ Greška pri upisu korisnika u fajl.");
         }
     }
-
+//LOGIVANJE OBICNOG KORISNIKA
     public Korisnik login(String korisnickoIme, String lozinka) {
         for (Korisnik k : korisnici) {
             if (k.getKorisnickoIme().equalsIgnoreCase(korisnickoIme) && k.getLozinka().equals(lozinka)) {
@@ -39,7 +40,7 @@ public class KorisnickiServis {
     public List<Korisnik> getKorisnici() {
         return korisnici;
     }
-
+// UCITVAVANJE SVIH KORISNIKA IZ FAJLA KADA SE REGISTRUJU
     private void ucitajKorisnikeIzFajla() {
         File fajl = new File(FAJL_KORISNIKA);
         if (!fajl.exists()) {
@@ -61,6 +62,7 @@ public class KorisnickiServis {
     public KorisnickiServis() {
         ucitajKorisnikeIzFajla();
     }
+    // MENJANJE LOZINKE
     public boolean promeniLozinku(String korisnickoIme, String staraLozinka, String novaLozinka) {
         for (Korisnik k : korisnici) {
             if (k.getKorisnickoIme().equalsIgnoreCase(korisnickoIme) && k.getLozinka().equals(staraLozinka)) {
@@ -71,7 +73,7 @@ public class KorisnickiServis {
         }
         return false;
     }
-
+// AZURIRANJE FAJLA SA KORISNICIMA I LOZINKAMA
     private void azurirajFajl() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FAJL_KORISNIKA))) {
             for (Korisnik k : korisnici) {
@@ -82,7 +84,7 @@ public class KorisnickiServis {
             System.out.println("❌ Greška pri ažuriranju fajla sa korisnicima.");
         }
     }
-
+// BRISANJE KORISNIKA
     public boolean obrisiKorisnika(String korisnickoIme, String lozinka) {
         Iterator<Korisnik> iterator = korisnici.iterator();
         boolean obrisan = false;
@@ -103,5 +105,24 @@ public class KorisnickiServis {
             return false;
         }
 
+    }
+    public void inicijalizujAdmina(){
+        korisnici.add(new Korisnik("Admin", "admin123"));
+    }
+    public boolean obrisiKorisnikaPoImenu(String korisnickoIme){
+        Iterator <Korisnik>it = korisnici.iterator();
+        boolean obrisan = false;
+        while(it.hasNext()){
+            Korisnik k = it.next();
+            if(k.getKorisnickoIme().equalsIgnoreCase(korisnickoIme)){
+                it.remove();
+                obrisan = true;
+                break;
+            }
+        }
+        if(obrisan){
+            azurirajFajl();
+        }
+        return obrisan;
     }
 }

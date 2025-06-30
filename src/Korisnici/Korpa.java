@@ -15,6 +15,7 @@ public class Korpa {
         }
         System.out.println("Ukupno: " + izracunajUkupno() + " RSD");
     }
+    // UKUPNA CENA U KORPI
     public double izracunajUkupno(){
         double suma = 0;
         for(StavkaZaKorpu s : stavke){
