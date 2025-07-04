@@ -123,6 +123,8 @@ public class KorisnickiServis {
         if(obrisan){
             azurirajFajl();
         }
+
         return obrisan;
     }
+
 }

@@ -1,13 +1,13 @@
 package Servis;
-import Modeli.KorisnickiServis;
-import Modeli.Korisnik;
+import Modeli.*;
 import java.util.Scanner;
-
+import java.util.*;
 
 public class Aplikacija {
     private Scanner scan = new Scanner(System.in);
     private KorisnickiServis korisnickiServis = new KorisnickiServis();
     private Korisnik ulogovanKorisnik = null;
+    private MeniServis meniServis = new MeniServis();
 //pokretanje aplikacije
     public void pokreni() {
         System.out.println("Dobrodosli u Sistem za Narucivanje hrane!");
@@ -32,6 +32,17 @@ public class Aplikacija {
                     System.out.println("Nepoznata opcija.");
             }
         }
+    }
+    //Dodavanje artikla rucno
+    private void dodajArtikalRucno() {
+        System.out.print("Naziv artikla: ");
+        String naziv = scan.nextLine();
+        System.out.print("Opis: ");
+        String opis = scan.nextLine();
+        System.out.print("Cena: ");
+        double cena = Double.parseDouble(scan.nextLine());
+        meniServis.dodajArtikal(naziv, opis, cena);
+        System.out.println("✅ Artikal dodat.");
     }
 // login korisnika
     private void login() {
@@ -129,15 +140,19 @@ public class Aplikacija {
             }
         }
     }
-    private void adminMeni(){
-        while (true){
-            System.out.println("\n ===ADMIN MENI===");
+    private void adminMeni() {
+        while (true) {
+            System.out.println("\n=== ADMIN MENI ===");
             System.out.println("1. Prikaz svih korisnika");
-            System.out.println("2. Brisanje korisnika po imenu");
-            System.out.println("3. Odjava");
-            System.out.println("Izaberite opciju");
-            String izbor = scan.nextLine();
+            System.out.println("2. Brisanje korisnika po korisničkom imenu");
+            System.out.println("3. Prikaz menija");
+            System.out.println("4. Dodavanje artikla (ručno)");
+            System.out.println("5. Dodavanje artikla iz globalne baze");
+            System.out.println("6. Brisanje artikla");
+            System.out.println("7. Odjava");
+            System.out.print("Izaberite opciju: ");
 
+            String izbor = scan.nextLine();
             switch (izbor) {
                 case "1":
                     for (Korisnik k : korisnickiServis.getKorisnici()) {
@@ -145,21 +160,64 @@ public class Aplikacija {
                     }
                     break;
                 case "2":
-                    System.out.print("Unesite korisničko ime koje želite da obrišete: ");
+                    System.out.print("Unesite korisničko ime za brisanje: ");
                     String korisnikZaBrisanje = scan.nextLine();
                     if (korisnickiServis.obrisiKorisnikaPoImenu(korisnikZaBrisanje)) {
-                        System.out.println("✅ Korisnik je obrisan.");
+                        System.out.println("✅ Korisnik obrisan.");
                     } else {
                         System.out.println("❌ Korisnik nije pronađen.");
                     }
                     break;
                 case "3":
-                    System.out.println("Odjava admina.");
+                    meniServis.prikaziMeni();
+                    break;
+                case "4":
+                    dodajArtikalRucno();
+                    break;
+                case "5":
+                    dodajArtikalIzBaze();
+                    break;
+                case "6":
+                    System.out.print("Unesite naziv artikla za brisanje: ");
+                    String nazivZaBrisanje = scan.nextLine();
+                    if (meniServis.obrisiArtikal(nazivZaBrisanje)) {
+                        System.out.println("✅ Artikal obrisan.");
+                    } else {
+                        System.out.println("❌ Artikal nije pronađen.");
+                    }
+                    break;
+                case "7":
+                    System.out.println("Admin odjavljen.");
                     return;
                 default:
                     System.out.println("Nepoznata opcija.");
             }
-
         }
+    }
+    private void prikaziGlobalnuBazu() {
+        List<Artikal> baza = GlobalnaBazaArtikala.getSviArtikli();
+        for (int i = 0; i < baza.size(); i++) {
+            System.out.println((i + 1) + ". " + baza.get(i));
+        }
+    }
+    private void dodajArtikalIzBaze() {
+        prikaziGlobalnuBazu();
+        System.out.print("Unesite broj artikla koji želite da dodate: ");
+        int index = Integer.parseInt(scan.nextLine()) - 1;
+        List<Artikal> baza = GlobalnaBazaArtikala.getSviArtikli();
+        if(index < 0 || index >= baza.size()) {
+            System.out.println("Nepostojeci artikal.");
+            return;
+        }
+        Artikal izabrani = baza.get(index);
+        System.out.print("Unesite cenu za artikal (" + izabrani.getNaziv() + "): ");
+        double cena = Double.parseDouble(scan.nextLine());
+        System.out.print("Unesite opis (ostavite prazno za podrazumevani): ");
+        String opis = scan.nextLine();
+        if(opis.isEmpty()) {
+            opis = izabrani.getOpis();
+        }
+        meniServis.dodajArtikal(izabrani.getNaziv(), opis, cena);
+        System.out.println("Artikal dodat u meni.");
     }
 }
